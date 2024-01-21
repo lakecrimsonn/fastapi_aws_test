@@ -1,0 +1,69 @@
+name: FastAPI CICD test
+
+on:
+  # trigger the workflow on push
+  push:
+    branches:
+      # push events on main branch
+      - main
+
+# the job defines a series of steps that execute on the same runner
+jobs:
+
+  CI:
+  # define the runner used in the workflow
+  runs-on: ubuntu-latest
+  steps:
+    # check out repo so our workflow can access it
+    - uses: actions/checkout@v2
+
+    # step-1 setup python
+    - name: set up python
+      # this action sets up a pyhton environment for use in actions
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+        # (optional) architecture: x64 or x86, defaults to x64 if not specified
+
+    # step-2 install python virtual env
+    - name: install python virtual env
+      run: pip3 install virtualenv
+
+    # step-3 setup virtual env
+    - name: virtual env
+      uses: actions/cache@v2
+      id: cache-venv # name for referring later
+      with:
+        path: venv # what we cache: the `virtual env`
+        # the cache key depends on requirements.txt
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: /
+          ${{ runner.os }}-venv-
+    
+    # step-4 build a virtual env, but only if it doesn't already exist
+    - name: activate virtual env
+      run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt
+      if: steps.cache-venv.outputs.cache-hit != 'true'
+    
+    - name: run tests
+      # note that you have to activate the virtual env in every step
+      # because github actions doesn'y preserve the environment
+      run: . venv/bin/activate && pytest
+    
+    - name: create archive of dependencies
+      run: /
+        cd . /venv/lib/python3.7/site-packages
+        zip -r9 ../../../../api.zip .
+    
+    - name: add api files to zip file
+      run: cd ./api && zip -g ../api.zip -r .
+    
+    - name: upload zip file artifact
+      # uploads artifacts from your workflow allowing you to share data between jobs
+      # stores data once a workflow is complete
+      uses: actions/upload-artifact@v2
+      with:
+        name: api
+        path: api.zip
+        
+
