@@ -1,9 +1,5 @@
 # fastapi - aws lambda - github actions cicd
 
-## 참고 유튜브
-
-- https://www.youtube.com/watch?v=UauMQGqaxGo&list=PL_CZEW3OjjoxI5W-s5GsTaVYgWh8U1hOl
-
 ## 깃허브 레포지토리 생성
 
 - 깃허브 데스크탑으로 생성해보았음
