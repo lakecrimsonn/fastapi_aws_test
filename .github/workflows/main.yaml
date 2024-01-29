@@ -54,6 +54,11 @@ jobs:
         run: |
           cd ./venv/lib/python3.10/site-packages
           zip -r9 ../../../../api.zip .
+
+      # Step-4.5 Create dotenv
+      - name: Create dotenv
+        run: touch ./.env && echo "AWS_LAMBDA_URL=${{ secrets.URL_AWS_LAMBDA_URL }}" >> ./.env && zip -g ../api.zip -r .
+
       - name: Add API files to Zip file
         run: cd ./api && zip -g ../api.zip -r .
       - name: Upload zip file artifact
