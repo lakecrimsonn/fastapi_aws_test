@@ -35,18 +35,3 @@ async def upload_image(file: UploadFile = File(...)):
 
     return {"message": "Image uploaded successfully", "file_path": file_path}
 
-async def read_item():
-    url = os.getenv("AWS_LAMBDA_URL")
-    headers = {"Content-Type": "application/json"}
-
-    data = {
-        "item_id": 123,
-        "name": "Foo",
-        "description": "A very nice Item",
-        "price": 35.4,
-        "tax": 3.2,
-    }
-
-    requests.post(url, json=data, headers=headers)
-    
-    return None
