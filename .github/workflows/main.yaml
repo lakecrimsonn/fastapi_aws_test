@@ -57,7 +57,14 @@ jobs:
 
       # Step-4.5 Create dotenv
       - name: Create dotenv
-        run: touch ./.env && echo "FIREBASE_FUNCTIONS_URL=${{ secrets.FIREBASE_FUNCTIONS_URL }} OCR_API_KEY=${{ secrets.OCR_API_KEY }} OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} OCR_URL=${{ secrets.OCR_URL }} >> ./.env && zip -g ../api.zip -r .
+        run: |
+          cat <<EOF > ./.env
+          FIREBASE_FUNCTIONS_URL=${{ secrets.FIREBASE_FUNCTIONS_URL }}
+          OCR_API_KEY=${{ secrets.OCR_API_KEY }}
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          OCR_URL=${{ secrets.OCR_URL }}
+          EOF
+          zip -g ../api.zip -r .
 
       - name: Add API files to Zip file
         run: cd ./api && zip -g ../api.zip -r .
