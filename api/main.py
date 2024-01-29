@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import shutil
 import requests
+from api.execute import execute
 
 load_dotenv()
 
@@ -29,7 +30,8 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    await read_item()
+    # await read_item()
+    await execute(file_path)
 
     return {"message": "Image uploaded successfully", "file_path": file_path}
 
